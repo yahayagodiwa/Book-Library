@@ -1,6 +1,6 @@
 const Book = require('../models/Book');
 const User = require('../models/User')
-const Review = require('../models/Review')
+const Review = require('../models/review')
 
 const cloudinary = require('../utils/cloudinary');
 const streamifier = require('streamifier');
