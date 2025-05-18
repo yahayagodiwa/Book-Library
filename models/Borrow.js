@@ -14,6 +14,10 @@ const borrowSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  fine: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: 0
+  },
   returned:{
     type: Boolean,
     default: false

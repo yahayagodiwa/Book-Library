@@ -173,7 +173,7 @@ const mailOptions = {
   to: email,
   subject: "Password Reset",
   text: 'Click the link below to reset your password',
-  html: `<a href="${link}" style="background:#007bff;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">Reset Password</a>
+  html: `<a href="${link}" style="background:#007bff;color:#fff;padding:10px 20px;margin:30px 0;text-decoration:none;border-radius:5px;">Reset Password</a>
   <p>This link will expire in 1 hour</p>
   `
 }
