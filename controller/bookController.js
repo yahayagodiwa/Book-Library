@@ -189,12 +189,13 @@ const returnBook = async (req, res)=>{
     }
 
     const now = new Date();
-    
-    if(now > borrow.returnDate){
+    const returnDate = new Date(borrow.returnDate);
+    if(now > returnDate){
      const user = await User.findById(req.user._id)
-     console.log(borrow);
+     await user.populate('borrows');
+     console.log(user);
      
-      user.fine += borrow.book.fine
+      user.fine += borrow.fine
       await user.save()
     }
     borrow.returned = true
