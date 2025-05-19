@@ -11,7 +11,7 @@ try {
     })
 
     const mailOptions = {
-        from: "Prodigy",
+        from: "Prodigy Lab <peforum11@gmail.com>",
         to: user.email,
         subject: "Verify Your Email",
         text: `Click the link to verify your email: ${process.env.FRONTEND_URL}/user/verify-email/${user._id}`
