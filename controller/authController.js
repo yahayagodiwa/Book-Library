@@ -259,8 +259,16 @@ const updateProfile = async (req, res)=>{
 
 }
 
+//////--------------------------------- User Dashboard -------------------------------//////////////////
+
+const userDashboard = async (req, res)=>{
+  const user = await req.user
+  if(!user) return res.status(404).json({error: "User not found"})
+  return res.status(200).json({user})
+}
+
 
 
 module.exports = {
-    register, verifyEmail, login, getUser, forgetPassword, resetPassword, updateProfile
+    register, verifyEmail, login, getUser, forgetPassword, resetPassword, updateProfile, userDashboard
 }
