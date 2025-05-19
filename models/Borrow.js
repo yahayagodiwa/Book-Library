@@ -15,7 +15,7 @@ const borrowSchema = new mongoose.Schema({
     required: true
   },
   fine: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     default: 0
   },
   returned:{

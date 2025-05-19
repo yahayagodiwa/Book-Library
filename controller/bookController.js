@@ -156,7 +156,7 @@ const borrowBook = async (req, res)=>{
         book: id,
         borrowNote,
         returnDate,
-        fine: book.fine
+       fine: book.fineAmount
     })
     await newBorrow.save()
 
