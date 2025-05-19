@@ -262,8 +262,10 @@ const updateProfile = async (req, res)=>{
 //////--------------------------------- User Dashboard -------------------------------//////////////////
 
 const userDashboard = async (req, res)=>{
-  const user = await req.user
-  if(!user) return res.status(404).json({error: "User not found"})
+  const userId = await req.user._id
+  if(!userId) return res.status(404).json({error: "User not found"})
+    const user = await User.findById(userId).populate('borrows')
+  
   return res.status(200).json({user})
 }
 
