@@ -7,6 +7,7 @@ const streamifier = require("streamifier");
 const Borrow = require("../models/Borrow");
 const redis = require("../utils/redisClient");
 
+
 //////--------------------------------- Cloudinary -------------------------------//////////////////
 
 const streamUpload = (buffer) => {
@@ -124,6 +125,50 @@ const allBook = async (req, res) => {
       .json({ error: "Internal server error", details: error.message });
   }
 };
+
+const allBooksByCategories = async (req, res) => {
+  const { category } = req.query;
+  try {
+    const cachedBooks = await redis.get(`allBooksBy${category}`);
+
+    if (cachedBooks) {
+      const books = JSON.parse(cachedBooks);
+
+      if (books.length === 0) {
+        return res.status(404).json({
+          message: `No books found for the ${category} category!`
+        });
+      }
+
+      return res.status(200).json({
+        message: "Books fetched from cache",
+        books,
+      });
+    }
+
+    const books = await Book.find({ category });
+
+    if (books.length === 0) {
+      return res.status(404).json({
+        message: `No books found for the ${category} category!`
+      });
+    }
+
+    await redis.set(`allBooksBy${category}`, JSON.stringify(books), "EX", 3600); // 1 hour cache
+    return res.status(200).json({
+      message: "Books fetched from database",
+      books,
+    });
+
+  } catch (error) {
+    console.error("🔥 Error fetching books:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      details: error.message,
+    });
+  }
+};
+
 
 //////--------------------------------- Get singl book -------------------------------//////////////////
 const singleBook = async (req, res) => {
@@ -365,4 +410,5 @@ module.exports = {
   likeBook,
   updateBook,
   deleteBook,
+  allBooksByCategories
 };
