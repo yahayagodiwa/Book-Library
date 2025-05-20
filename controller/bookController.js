@@ -181,7 +181,7 @@ const singleBook = async (req, res) => {
     const book = await Book.findById(id).populate(
       "reviews",
       "comment rating reviewAuthor"
-    );
+    ).populate('author', "username");
 
     if (!book) {
       return res.status(404).json({ error: "Book not found" });

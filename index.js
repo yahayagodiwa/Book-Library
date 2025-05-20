@@ -6,6 +6,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 const userRoutes = require('./routes/userRoutes')
 const bookRoutes = require('./routes/bookRoutes')
+const limiter = require('./middleware/ratelimiting')
 
 const app = express()
 app.use(bodyParser.json())
@@ -17,6 +18,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+app.use(limiter)
 
 app.use('/user', userRoutes)
 app.use('/book', bookRoutes)
