@@ -106,25 +106,25 @@ const recordBook = async (req, res) => {
 
 const allBook = async (req, res) => {
   try {
-    const catchedBook = await redis.get("allBooks");
+    // const cachedBooks = await redis.get("allBooks");
 
-    if (catchedBook) {
-      return res.status(200).json({
-        message: "Book fetched from catche",
-        books: JSON.parse(catchedBook),
-      });
-    }
+    // if (cachedBooks) {
+    //   return res.status(200).json({
+    //     message: "Books fetched from cache",
+    //     books: JSON.parse(cachedBooks),
+    //   });
+    // }
 
-    const books = await Book.find();
+    const books = await Book.find().populate("author", "username"); 
     await redis.set("allBooks", JSON.stringify(books), "EX", 3600);
-    return res.status(200).json({ message: "All book fetched", books });
+
+    return res.status(200).json({ message: "Books fetched from database", books });
   } catch (error) {
-    console.error("🔥 Error saving book:", error);
-    return res
-      .status(500)
-      .json({ error: "Internal server error", details: error.message });
+    console.error("🔥 Error fetching books:", error);
+    return res.status(500).json({ error: "Internal server error", details: error.message });
   }
 };
+
 
 const allBooksByCategories = async (req, res) => {
   const { category } = req.query;
