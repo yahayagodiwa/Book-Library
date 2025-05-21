@@ -51,7 +51,7 @@ const staffAuth = async (req, res, next)=>{
         next()
         
     } catch (error) {
-        return res.status(500).json({error: "error occured authenticating Staff" + error.message})
+        return res.status(500).json({error: "Please login to perform the action" + error.message})
     }
 
 }
