@@ -7,7 +7,7 @@ try {
     let token = req.headers['authorization']
 
     if(!token || !token.startsWith('Bearer')){
-        return res.status(400).json({error: "Invalid or expired token"})
+        return res.status(400).json({error: "Please login"})
     }
 
     token = token.split(" ")[1]
@@ -23,19 +23,19 @@ try {
         }
 
         if(decode.exp < Date.now() / 1000){
-            return res.status(401).json({error: "Token expired"})
+            return res.status(401).json({error: "Please login again"})
         }
         
         req.user = user
         req.token = token
         next()
     } catch (error) {
-        return res.status(500).json({error: "error occured authenticating user"})
+        return res.status(500).json({error: "Please login"})
         
     }
 
 } catch (error) {
-    return res.status(500).json({error: "error occured authenticating user" + error.message})
+    return res.status(500).json({error: "Please login" + error.message})
 }
 }
 
