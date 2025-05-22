@@ -24,7 +24,7 @@ const borrowSchema = new mongoose.Schema({
   },
   confirmed: {
     type: Boolean,
-    dafault: false
+    default: false
   },
   borrowDate: {
     type: Date,
