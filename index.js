@@ -18,7 +18,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-app.use(limiter)
+// app.use(limiter)
 
 app.use('/user', userRoutes)
 app.use('/book', bookRoutes)
