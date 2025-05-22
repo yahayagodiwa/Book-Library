@@ -25,14 +25,6 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    createdAt:{
-        type: Date,
-        default: Date.now
-    },
-    updatedAt:{
-        type: Date,
-        default: Date.now
-    },
     isVerified:{
         type: Boolean,
         default: false
@@ -49,7 +41,7 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Borrow"
     }]
-})
+}, {timestamps: true})
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 module.exports = User

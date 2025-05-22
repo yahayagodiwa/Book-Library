@@ -79,15 +79,8 @@ const bookSchema = new mongoose.Schema({
     },
   ],
 
-  publishedAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  
+}, { timestamps: true });
 
 const Book = mongoose.model("Book", bookSchema);
 module.exports = Book;

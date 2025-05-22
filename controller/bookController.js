@@ -115,7 +115,7 @@ const allBook = async (req, res) => {
     //   });
     // }
 
-    const books = await Book.find().populate("author", "username"); 
+    const books = await Book.find().sort({createdAt: -1}).populate("author", "username"); 
     await redis.set("allBooks", JSON.stringify(books), "EX", 3600);
 
     return res.status(200).json({ message: "Books fetched from database", books });

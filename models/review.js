@@ -21,7 +21,7 @@ const reviewSchema = new mongoose.Schema({
         ref: "Book",
         required: true
     }
-})
+}, {timestamps: true})
 
 
 const Review = mongoose.models.Review || mongoose.model('Review', reviewSchema);
