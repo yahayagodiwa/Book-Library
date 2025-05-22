@@ -178,10 +178,17 @@ const singleBook = async (req, res) => {
       return res.status(400).json({ error: "Invalid book ID" });
     }
 
-    const book = await Book.findById(id).populate(
-      "reviews",
-      "comment rating reviewAuthor"
-    ).populate('author', "username");
+    const book = await Book.findById(id).populate({
+    path: "reviews",
+    populate: {
+      path: "reviewAuthor",
+      select: "username"
+    }
+  })
+  .populate({
+    path: "author",
+    select: "username"
+  })
 
     if (!book) {
       return res.status(404).json({ error: "Book not found" });
@@ -251,9 +258,14 @@ const borrowBook = async (req, res) => {
 
 const returnBook = async (req, res) => {
   const { borrowId } = req.params;
-  console.log(req.params);
-
-  const borrow = await Borrow.findById(borrowId).populate("book");
+  // console.log(req.params);
+  // const user = await User.findById(req.user._id); // assuming `req.user` is set via auth middleware
+// await Borrow.updateMany(
+//   { user: { $exists: false } },
+//   { $set: { user: user._id } }
+// );
+  
+  const borrow = await Borrow.findById(borrowId).populate("book").populate('user', "username email");
   // console.log(borrow);
 
   if (!borrow)
@@ -268,7 +280,7 @@ const returnBook = async (req, res) => {
   if (now > returnDate) {
     const user = await User.findById(req.user._id);
     await user.populate("borrows");
-    console.log(user);
+    // console.log(user);
 
     user.fine += borrow.fine;
     await user.save();
@@ -280,10 +292,37 @@ const returnBook = async (req, res) => {
 
 //////---------------------------------Get Returned book -------------------------------//////////////////
 
-// const returnedBooks = async (req, res)=>{
-//   const {books} = 
-// }
+const returnedBooks = async (req, res) => {
+  try {
+    // const user = req.user._id
+    const borrows = await Borrow.find({ returned: true }).populate('book').populate('user', "username email")
+    console.log(borrows);
+    
+    if (!borrows || borrows.length === 0) {
+      return res.status(404).json({ message: 'No returned books found' });
+    }
+    res.status(200).json({ books: borrows });
+  } catch (error) {
+    console.error('Error fetching returned books:', error);
+    res.status(500).json({ error: 'Server error while fetching returned books' });
+  }
+};
 
+//////---------------------------------Get Returned book -------------------------------//////////////////
+
+const confirmReturns = async (req, res)=>{
+  const {id} = await req.params
+  const book = await Borrow.findById(id)
+  if(!book){
+    return res.status(404).json({error: "Book not found"})
+  }
+  console.log(book);
+   book.confirmed = true
+   await book.save()
+
+   return res.status(200).json({message: "Book return Confirmed"})
+  
+}
 
 //////--------------------------------- Review Book -------------------------------//////////////////
 
@@ -301,15 +340,17 @@ const reviewBook = async (req, res) => {
     }
 
     const book = await Book.findById(bookId);
-
+    // console.log(book);
+    
     if (!book) {
       return res.status(403).json({ error: "Book not found" });
     }
 
-    const hasReviewed = Review.findOne({
+    const hasReviewed = await Review.findOne({
       book: bookId,
       reviewAuthor: req.user._id,
     });
+// console.log(hasReviewed);
 
     if (hasReviewed) {
       return res
@@ -418,5 +459,7 @@ module.exports = {
   likeBook,
   updateBook,
   deleteBook,
-  allBooksByCategories
+  allBooksByCategories,
+  returnedBooks,
+  confirmReturns
 };

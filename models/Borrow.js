@@ -6,6 +6,11 @@ const borrowSchema = new mongoose.Schema({
     ref: "Book",
     required: true
   },
+  user:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
   borrowNote: {
     type: String,
     required: true,
