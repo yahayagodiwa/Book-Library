@@ -136,7 +136,7 @@ const allBooksByCategories = async (req, res) => {
 
       if (books.length === 0) {
         return res.status(404).json({
-          message: `No books found for the ${category} category!`
+          error: `No books found for the ${category} category!`
         });
       }
 
