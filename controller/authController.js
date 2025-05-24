@@ -101,13 +101,16 @@ const login = async (req, res)=>{
     return res.status(400).json({error: "All fields required"})
   }
   const existing = await User.findOne({username})
+  if(existing.role === "admin" || existing.role === "staff"){
+    return res.status(403).json({error: "Only users can login here"})
+  }
   if(!existing){
-    return res.status(404).json({error: "User not found"})
+    return res.status(404).json({error: "Incorrect username"})
   }
 
-  // if(!existing.isVerified){
-  //   return res.status(403).json({error: "Please verify your account"})
-  // }
+  if(!existing.isVerified){
+    return res.status(403).json({error: "Please verify your account"})
+  }
   if(existing.isBlocked){
     return res.status(403).json({error: "Your account is blocked. Contact Admin"})
   }

@@ -5,7 +5,7 @@ const upload = require('../middleware/multer')
 
 const router = express.Router()
 
-router.post('/record', authMiddleware, adminAuth, upload.single('bookCover'), recordBook)
+
 router.get('/all-book', allBook)
 router.get('/all-book-by-category', allBooksByCategories)
 router.get('/single-book/:id',  singleBook)
