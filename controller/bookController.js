@@ -208,6 +208,7 @@ const borrowBook = async (req, res) => {
   try {
     const { id } = req.params;
     const { borrowNote, returnDate } = req.body;
+   
     if (!id || id.length !== 24) {
       return res.status(400).json({ error: "Invalid book ID" });
     }
@@ -225,12 +226,16 @@ const borrowBook = async (req, res) => {
     if (!book) {
       return res.status(404).json({ error: "Book not found" });
     }
+
     const borrowed = await Borrow.findOne({ book });
     if (borrowed)
       return res
         .status(400)
         .json({ error: "you have already borrowed this book" });
-
+  const user = await User.findById(req.user._id);
+  if(user.role === "admin" || user.role === "staff"){
+    return res.status(403).json({error: `${user.role} cannot borrow book`})
+  }
     const newBorrow = new Borrow({
       book: id,
       borrowNote,
@@ -239,7 +244,7 @@ const borrowBook = async (req, res) => {
     });
     await newBorrow.save();
 
-    const user = await User.findById(req.user._id);
+  
     user.borrows.push(newBorrow._id);
     await user.save();
 
