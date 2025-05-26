@@ -12,7 +12,7 @@ router.post('/login', adminLogin)
 router.post('/record', authMiddleware, adminAuth, upload.single('bookCover'), recordBook)
 router.get('/dashboard', authMiddleware, adminDashboard)
 router.patch('/update-book/:bookId', authMiddleware, adminAuth, upload.single("bookCover"), editBook)
-router.patch('/delete-book/:bookId', authMiddleware, adminAuth, deleteBook)
+router.delete('/delete-book/:bookId', authMiddleware, adminAuth, deleteBook)
 
 
 module.exports = router
