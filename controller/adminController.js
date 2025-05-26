@@ -47,7 +47,7 @@ const adminLogin = async (req, res) => {
   }
 };
 
-///////////////// --------------------------- Login ------------------------ /////////////////////////
+///////////////// --------------------------- Admin Dashboard ------------------------ /////////////////////////
 const adminDashboard = async (req, res)=>{
     try {
         const userId = await req.user._id

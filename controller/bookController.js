@@ -37,7 +37,7 @@ const streamUpload = (buffer) => {
 
 const recordBook = async (req, res) => {
   try {
-    const { title, description, fineAmount } = req.body;
+    const { title, description, fineAmount, author } = req.body;
 
     // Validation
     if (!title || !description || !fineAmount) {
@@ -79,7 +79,7 @@ const recordBook = async (req, res) => {
       bookCover: result.secure_url,
       fineAmount,
       category: req.body.category,
-      author: req.user._id,
+      author: author,
     });
 
     await newBook.save();
