@@ -11,7 +11,7 @@ const router = express.Router()
 router.post('/login', adminLogin)
 router.post('/record', authMiddleware, adminAuth, upload.single('bookCover'), recordBook)
 router.get('/dashboard', authMiddleware, adminDashboard)
-router.patch('/update-book/:bookId', authMiddleware, adminAuth, editBook)
+router.patch('/update-book/:bookId', authMiddleware, adminAuth, upload.single("bookCover"), editBook)
 
 
 module.exports = router
