@@ -65,12 +65,34 @@ const adminDashboard = async (req, res)=>{
 
 ///////////////// --------------------------- Edit Book ------------------------ /////////////////////////
 const editBook = async (req, res) => {
-    const {bookId} = req.params
-    const book = await Book.findByIdAndUpdate(bookId, req.body, {runValidators: true, new: true})
-    if(!book){
-        return res.status(404).json({error: "Book not found"})
+
+    try {
+        const { bookId } = req.params;
+
+  const updateData = {
+    ...req.body,
+  };
+
+  if (req.file) {
+    updateData.bookCover = `/uploads/book-covers/${req.file.filename}`;
+  }
+
+  const book = await Book.findByIdAndUpdate(bookId, updateData, {
+    runValidators: true,
+    new: true,
+  });
+
+  if (!book) {
+    return res.status(404).json({ error: "Book not found" });
+  }
+
+  return res.status(200).json({ message: "Book updated successfully", book });
+
+    } catch (error) {
+        console.error("Error editing book:", error);
+        return res.status(500).json({ error: "Internal server error" });
+        
     }
-    return res.status(200).json({message: "Book updated successfully", book})
 }
 
 
