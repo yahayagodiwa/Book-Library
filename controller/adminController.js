@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Book = require('../models/Book');
 
 
 ///////////////// --------------------------- Login ------------------------ /////////////////////////
@@ -62,6 +63,17 @@ const adminDashboard = async (req, res)=>{
     
 }
 
+///////////////// --------------------------- Edit Book ------------------------ /////////////////////////
+const editBook = async (req, res) => {
+    const {bookId} = req.params
+    const book = await Book.findByIdAndUpdate(bookId, req.body, {runValidators: true, new: true})
+    if(!book){
+        return res.status(404).json({error: "Book not found"})
+    }
+    return res.status(200).json({message: "Book updated successfully", book})
+}
+
+
 module.exports = {
-    adminLogin, adminDashboard
+    adminLogin, adminDashboard,  editBook
 }
