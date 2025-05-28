@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Book = require("../models/Book");
+const Borrow = require("../models/Borrow");
 
 ///////////////// --------------------------- Login ------------------------ /////////////////////////
 const adminLogin = async (req, res) => {
@@ -112,9 +113,22 @@ const deleteBook = async (req, res) => {
   }
 };
 
+
+//////////////------------------- get all borrowed books .......................////////////////////
+const getBorrowed = async (req, res)=>{
+  try {
+    const books = await Borrow.find({returned: true})
+    return res.status(200).json(books)
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
+
 module.exports = {
   adminLogin,
   adminDashboard,
   editBook,
     deleteBook,
+    getBorrowed
 };

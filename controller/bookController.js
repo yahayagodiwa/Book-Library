@@ -241,6 +241,7 @@ const borrowBook = async (req, res) => {
       borrowNote,
       returnDate,
       fine: book.fineAmount,
+      user: req.user._id
     });
     await newBorrow.save();
 
