@@ -125,10 +125,47 @@ const getBorrowed = async (req, res)=>{
   }
 }
 
+
+//////---------------------------------Get Returned book -------------------------------//////////////////
+
+const returnedBooks = async (req, res) => {
+  try {
+    // const user = req.user._id
+    const borrows = await Borrow.find({ returned: true }).populate('book', "title").populate('user', "username email").sort({createdAt: -1})
+    // console.log(borrows);
+    
+    if (!borrows || borrows.length === 0) {
+      return res.status(404).json({ message: 'No returned books found' });
+    }
+    res.status(200).json({ books: borrows });
+  } catch (error) {
+    console.error('Error fetching returned books:', error);
+    res.status(500).json({ error: 'Server error while fetching returned books' });
+  }
+};
+
+//////---------------------------------Confirm Returned book -------------------------------//////////////////
+
+const confirmReturns = async (req, res)=>{
+  const {id} = await req.params
+  const book = await Borrow.findById(id)
+  if(!book){
+    return res.status(404).json({error: "Book not found"})
+  }
+  console.log(book);
+   book.confirmed = true
+   await book.save()
+
+   return res.status(200).json({message: "Book return Confirmed"})
+  
+}
+
 module.exports = {
   adminLogin,
   adminDashboard,
   editBook,
     deleteBook,
-    getBorrowed
+    getBorrowed,
+    returnedBooks,
+  confirmReturns
 };
