@@ -117,7 +117,7 @@ const deleteBook = async (req, res) => {
 //////////////------------------- get all borrowed books .......................////////////////////
 const getBorrowed = async (req, res)=>{
   try {
-    const books = await Borrow.find({returned: true})
+    const books = await Borrow.find({returned: false}).populate('book', "title").populate('user', "username")
     return res.status(200).json(books)
   } catch (error) {
     console.error("Error deleting book:", error);
