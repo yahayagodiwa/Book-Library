@@ -15,7 +15,7 @@ router.patch('/update-book/:bookId', authMiddleware, adminAuth, upload.single("b
 router.delete('/delete-book/:bookId', authMiddleware, adminAuth, deleteBook)
 router.get('/borrowed', authMiddleware, getBorrowed)
 router.get('/returned-books', returnedBooks)
-router.post('/confirm-returns/:id', confirmReturns)
+router.patch('/confirm-returns/:id', confirmReturns)
 
 
 

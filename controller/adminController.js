@@ -152,7 +152,7 @@ const confirmReturns = async (req, res)=>{
   if(!book){
     return res.status(404).json({error: "Book not found"})
   }
-  console.log(book);
+  // console.log(book);
    book.confirmed = true
    await book.save()
 
