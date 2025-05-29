@@ -147,7 +147,8 @@ const returnedBooks = async (req, res) => {
 //////---------------------------------Confirm Returned book -------------------------------//////////////////
 
 const confirmReturns = async (req, res)=>{
-  const {id} = await req.params
+  try {
+    const {id} = await req.params
   const book = await Borrow.findById(id)
   if(!book){
     return res.status(404).json({error: "Book not found"})
@@ -157,6 +158,22 @@ const confirmReturns = async (req, res)=>{
    await book.save()
 
    return res.status(200).json({message: "Book return Confirmed"})
+  } catch (error) {
+     console.error('Error fetching  books:', error);
+    res.status(500).json({ error: 'Server error while fetching books' });
+  }
+  
+}
+
+//////--------------------------------- Users -------------------------------//////////////////
+const getUsers = async (req, res)=>{
+  try {
+    const users = await User.find()
+  return res.status(200).json({users})
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Server error while fetching users' });
+  }
   
 }
 
@@ -167,5 +184,6 @@ module.exports = {
     deleteBook,
     getBorrowed,
     returnedBooks,
-  confirmReturns
+  confirmReturns, 
+  getUsers
 };
