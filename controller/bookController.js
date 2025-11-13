@@ -5,7 +5,7 @@ const Review = require("../models/review");
 const cloudinary = require("../utils/cloudinary");
 const streamifier = require("streamifier");
 const Borrow = require("../models/Borrow");
-const redis = require("../utils/redisClient");
+
 
 
 //////--------------------------------- Cloudinary -------------------------------//////////////////
@@ -87,7 +87,7 @@ const recordBook = async (req, res) => {
     const user = await User.findById(req.user._id);
     user.books.push(newBook);
     await user.save();
-    await redis.del("allBooks");
+  
 
     return res.status(201).json({
       message: "Book recorded successfully",
@@ -106,17 +106,10 @@ const recordBook = async (req, res) => {
 
 const allBook = async (req, res) => {
   try {
-    // const cachedBooks = await redis.get("allBooks");
-
-    // if (cachedBooks) {
-    //   return res.status(200).json({
-    //     message: "Books fetched from cache",
-    //     books: JSON.parse(cachedBooks),
-    //   });
-    // }
+ 
 
     const books = await Book.find().sort({createdAt: -1}).populate("author", "username"); 
-    await redis.set("allBooks", JSON.stringify(books), "EX", 3600);
+   
 
     return res.status(200).json({ message: "Books fetched from database", books });
   } catch (error) {
@@ -129,16 +122,6 @@ const allBook = async (req, res) => {
 const allBooksByCategories = async (req, res) => {
   const { category } = req.query;
   try {
-    const cachedBooks = await redis.get(`allBooksBy${category}`);
-
-    if (cachedBooks) {
-      const books = JSON.parse(cachedBooks);
-
-      if (books.length === 0) {
-        return res.status(404).json({
-          error: `No books found for the ${category} Genre!`
-        });
-      }
 
       return res.status(200).json({
         message: "Books fetched from cache",
@@ -154,7 +137,6 @@ const allBooksByCategories = async (req, res) => {
       });
     }
 
-    await redis.set(`allBooksBy${category}`, JSON.stringify(books), "EX", 3600); // 1 hour cache
     return res.status(200).json({
       message: "Books fetched from database",
       books,
@@ -391,7 +373,6 @@ const updateBook = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    await redis.del("allBooks");
 
     return res
       .status(200)
@@ -408,7 +389,7 @@ const deleteBook = async (req, res) => {
     const book = await Book.findById(id);
     if (!book) return res.status(404).json({ error: "Book not found" });
     await Book.findOneAndDelete(id);
-    await redis.del("allBooks");
+   
 
     return res.status(200).json({ message: "Book deleted successfully" });
   } catch (error) {
