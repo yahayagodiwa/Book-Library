@@ -122,13 +122,6 @@ const allBook = async (req, res) => {
 const allBooksByCategories = async (req, res) => {
   const { category } = req.query;
   try {
-
-      return res.status(200).json({
-        message: "Books fetched from cache",
-        books,
-      });
-    }
-
     const books = await Book.find({ category });
 
     if (books.length === 0) {
